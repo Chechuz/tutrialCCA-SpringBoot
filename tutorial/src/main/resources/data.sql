@@ -15,3 +15,9 @@ INSERT INTO game(title, age, category_id, author_id) VALUES ('1920: Wall Street'
 INSERT INTO game(title, age, category_id, author_id) VALUES ('Barrage', '14', 1, 3);
 INSERT INTO game(title, age, category_id, author_id) VALUES ('Los viajes de Marco Polo', '12', 1, 3);
 INSERT INTO game(title, age, category_id, author_id) VALUES ('Azul', '8', 3, 5);
+
+INSERT INTO client(name) VALUES ('Eduardo');
+INSERT INTO client(name) VALUES ('Clara');
+INSERT INTO client(name) VALUES ('Elena');
+INSERT INTO client(name) VALUES ('Jose');
+INSERT INTO client(name) VALUES ('Federico');
