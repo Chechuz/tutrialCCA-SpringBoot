@@ -21,6 +21,7 @@ public class ClientController {
     ClientService clientService;
     @Autowired
     ModelMapper mapper;
+    List<Client> clients;
 
     /**
      * Método para recuperar todos los {@link Client}
@@ -31,7 +32,7 @@ public class ClientController {
     @RequestMapping(path = "", method = RequestMethod.GET)
     public List<ClientDto> findAll() {
 
-        List<Client> clients = this.clientService.findAll();
+        clients = this.clientService.findAll();
 
         return clients.stream().map(e -> mapper.map(e, ClientDto.class)).collect(Collectors.toList());
     }
@@ -47,7 +48,7 @@ public class ClientController {
     public void save(@PathVariable(name = "id", required = false) Long id, @RequestBody ClientDto dto) throws Exception {
 
         this.clientService.save(id, dto);
-
+        
     }
 
     /**

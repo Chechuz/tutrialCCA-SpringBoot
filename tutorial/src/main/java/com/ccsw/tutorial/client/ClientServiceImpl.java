@@ -28,15 +28,29 @@ public class ClientServiceImpl implements ClientService {
         return (List<Client>) this.clientRepository.findAll();
     }
 
+    protected int itExist(List<Client> clients, ClientDto dto) {
+        for (Client c : clients) {
+            if (c.getName().equalsIgnoreCase(dto.getName())) {
+                return 0; // Cliente encontrado
+            }
+        }
+        return -1; // Cliente no encontrado
+    }
+
     @Override
     public void save(Long id, ClientDto dto) throws Exception {
+
         Client client;
+
         if (id == null) {
-            client = new Client();
+            if (itExist(findAll(), dto) == 0) {
+                throw new Exception("This client already exists");
+            } else {
+                client = new Client();
+            }
         } else {
             client = this.get(id);
         }
-
         client.setName(dto.getName());
         this.clientRepository.save(client);
     }
@@ -51,3 +65,25 @@ public class ClientServiceImpl implements ClientService {
 
     }
 }
+/*
+ int exist = itExist(findAll(), dto);// si es igual da 0
+        int integer = (exist != 0) ? 1 : 0;
+
+        Client client;
+        if (id == null) {
+            System.out.println("Entra en el if");
+            switch (integer) {
+            case 0:
+                System.out.println("switch caso 0");
+                throw new Exception("This client already exists");
+            case 1:
+                System.out.println("switch caso 1");
+                client = new Client();
+                break;
+            }
+        }
+        System.out.println("Sale del if");
+        client = this.get(id);
+        client.setName(dto.getName());
+        this.clientRepository.save(client);
+ */
