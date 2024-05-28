@@ -56,6 +56,17 @@ public class ClientIT {
         assertEquals(NEW_CLIENT_NAME, clientDtoSearch.getName());
     }
 
+    public static final String CURRENT_CLIENT_NAME = "Eduardo";
+
+    @Test
+    public void saveWithoutIdButExistingNameShouldThrowException() {
+        ClientDto dto = new ClientDto();
+        dto.setName(CURRENT_CLIENT_NAME);
+        ResponseEntity<?> response = restTemplate.exchange(LOCALHOST + port + SERVICE_PATH, HttpMethod.PUT, new HttpEntity<>(dto), Void.class);
+
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+    }
+
     public static final Long MODIFY_CLIENT_ID = 3L; //Elena
 
     @Test
