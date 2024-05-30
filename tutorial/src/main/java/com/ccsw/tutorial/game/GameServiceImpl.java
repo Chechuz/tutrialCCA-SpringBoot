@@ -23,6 +23,11 @@ public class GameServiceImpl implements GameService {
     @Autowired
     CategoryService categoryService;
 
+    @Override
+    public Game get(Long id) {
+        return this.gameRepository.findById(id).orElse(null);
+    }
+
     /**
      * {@inheritDoc}
      */

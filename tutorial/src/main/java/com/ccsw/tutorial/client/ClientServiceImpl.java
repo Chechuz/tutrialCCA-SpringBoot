@@ -49,7 +49,11 @@ public class ClientServiceImpl implements ClientService {
                 client = new Client();
             }
         } else {
-            client = this.get(id);
+            if (itExist(findAll(), dto) == 0) {
+                throw new Exception("This client already exists");
+            } else {
+                client = this.get(id);
+            }
         }
         client.setName(dto.getName());
         this.clientRepository.save(client);

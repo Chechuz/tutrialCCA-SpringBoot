@@ -54,7 +54,7 @@ public class AuthorController {
     }
 
     /**
-     * Método para crear o actualizar un {@link Author}
+     * Método para eliminar un {@link Author}
      *
      * @param id PK de la entidad
      */
