@@ -1,6 +1,8 @@
 package com.ccsw.tutorial.loan;
 
+import com.ccsw.tutorial.client.ClientService;
 import com.ccsw.tutorial.common.criteria.SearchCriteria;
+import com.ccsw.tutorial.game.GameService;
 import com.ccsw.tutorial.loan.model.Loan;
 import com.ccsw.tutorial.loan.model.LoanDto;
 import com.ccsw.tutorial.loan.model.LoanSearchDto;
@@ -19,6 +21,11 @@ public class LoanServiceImpl implements LoanService {
 
     @Autowired
     LoanRepository loanRepository;
+    @Autowired
+    ClientService clientService;
+
+    @Autowired
+    GameService gameService;
 
     @Override
     public Loan get(Long id) {
@@ -31,10 +38,12 @@ public class LoanServiceImpl implements LoanService {
     }
 
     @Override
-    public void save(LoanDto data) {
+    public void save(LoanDto dto) {
 
         Loan loan = new Loan();
-        BeanUtils.copyProperties(data, loan, "id");
+        BeanUtils.copyProperties(dto, loan, "id", "client", "game");
+        loan.setClient(clientService.get(dto.getClient().getId()));
+        loan.setGame(gameService.get(dto.getGame().getId()));
         this.loanRepository.save(loan);
     }
 
