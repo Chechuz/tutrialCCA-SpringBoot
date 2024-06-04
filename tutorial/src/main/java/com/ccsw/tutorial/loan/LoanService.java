@@ -44,14 +44,6 @@ public interface LoanService {
      *
      * @return {@link List} de {@link Loan}
      */
-    List<Loan> findAll();
+    List<Loan> find(String titleGame, String clientName, String date);
 
-    /**
-     * Recupera los prestamos filtrando opcionalmente por nombre cliente y/o titulo del juego
-     *
-     * @param titleGame título del juego
-     * @param clientName nombre del cliente
-     * @return {@link List} de {@link Loan}
-     */
-    List<Loan> find(String titleGame, String clientName);
 }

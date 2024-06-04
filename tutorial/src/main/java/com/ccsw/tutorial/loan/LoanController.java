@@ -67,14 +67,14 @@ public class LoanController {
 
     /**
      * Recupera un listado de prestamos {@link Loan}
-     *
+     *completo o filtrado
      * @return {@link List} de {@link LoanDto}
      */
-    @Operation(summary = "Find", description = "Method that return a list of Loan")
+    @Operation(summary = "Find", description = "Method that return a filtered list of Loan")
     @RequestMapping(path = "", method = RequestMethod.GET)
-    public List<LoanDto> findAll() {
+    public List<LoanDto> find(@RequestParam(value = "titleGame", required = false) String titleGame, @RequestParam(value = "clientName", required = false) String clientName, @RequestParam(value = "date", required = false) String date) {
 
-        List<Loan> loans = this.loanService.findAll();
+        List<Loan> loans = this.loanService.find(titleGame, clientName, date);
 
         return loans.stream().map(e -> mapper.map(e, LoanDto.class)).collect(Collectors.toList());
     }
