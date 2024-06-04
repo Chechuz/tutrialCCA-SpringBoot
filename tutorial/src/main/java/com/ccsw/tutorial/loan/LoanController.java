@@ -11,7 +11,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.stream.Collectors;
 
 @Tag(name = "Loan", description = "API of Loan")
@@ -28,15 +27,21 @@ public class LoanController {
 
     /**
      * Método para recuperar un listado paginado de {@link Loan}
-     *
+     * con opción de filtrado por titleGame, clientName y date.
      * @param dto Dto de búsqueda
+     * @param titleGame Título del juego para filtrar
+     *@param clientName Nombre del cliente para filtrar
+     *@param date Fecha para filtrar
      * @return {@link Page} de {@link LoanDto}
      */
     @Operation(summary = "Find Page", description = "Method that return a page of Loans")
     @RequestMapping(path = "", method = RequestMethod.POST)
-    public Page<LoanDto> findPage(@RequestBody LoanSearchDto dto) {
+    public Page<LoanDto> findPage(@RequestBody LoanSearchDto dto, @RequestParam(value = "titleGame", required = false) String titleGame, @RequestParam(value = "clientName", required = false) String clientName,
+            @RequestParam(value = "date", required = false) String date) {
 
-        Page<Loan> page = this.loanService.findPage(dto);
+        Page<Loan> page = this.loanService.findPage(dto, titleGame, clientName, date);
+
+        System.out.println("Datos Filtrados: " + dto + " - " + titleGame + "- " + clientName + "- " + date);
 
         return new PageImpl<>(page.getContent().stream().map(e -> mapper.map(e, LoanDto.class)).collect(Collectors.toList()), page.getPageable(), page.getTotalElements());
     }
@@ -65,17 +70,4 @@ public class LoanController {
         this.loanService.delete(id);
     }
 
-    /**
-     * Recupera un listado de prestamos {@link Loan}
-     *completo o filtrado
-     * @return {@link List} de {@link LoanDto}
-     */
-    @Operation(summary = "Find", description = "Method that return a filtered list of Loan")
-    @RequestMapping(path = "", method = RequestMethod.GET)
-    public List<LoanDto> find(@RequestParam(value = "titleGame", required = false) String titleGame, @RequestParam(value = "clientName", required = false) String clientName, @RequestParam(value = "date", required = false) String date) {
-
-        List<Loan> loans = this.loanService.find(titleGame, clientName, date);
-
-        return loans.stream().map(e -> mapper.map(e, LoanDto.class)).collect(Collectors.toList());
-    }
 }

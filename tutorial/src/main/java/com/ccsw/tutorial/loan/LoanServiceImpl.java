@@ -10,13 +10,13 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 @Service
 @Transactional
@@ -36,8 +36,11 @@ public class LoanServiceImpl implements LoanService {
     }
 
     @Override
-    public Page<Loan> findPage(LoanSearchDto dto) {
-        return this.loanRepository.findAll(dto.getPageable().getPageable());
+    public Page<Loan> findPage(LoanSearchDto dto, String titleGame, String clientName, String date) {
+        Specification<Loan> spec = buildSpec(titleGame, clientName, date);
+        Pageable pageable = dto.getPageable().getPageable();
+        return loanRepository.findAll(spec, pageable);
+        
     }
 
     @Override
@@ -80,8 +83,7 @@ public class LoanServiceImpl implements LoanService {
      * @param clientName  o por
      * @param titleGame
      */
-    @Override
-    public List<Loan> find(String titleGame, String clientName, String date) {
+    public Specification<Loan> buildSpec(String titleGame, String clientName, String date) {
         Specification<Loan> spec;
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -104,7 +106,7 @@ public class LoanServiceImpl implements LoanService {
                 spec = Specification.where(clientSpec).and(gameSpec).and(loanDateSpec).and(returnDateSpec);
             }
 
-            return loanRepository.findAll(spec);
+            return spec;
 
         } catch (ParseException e) {
             e.printStackTrace();
