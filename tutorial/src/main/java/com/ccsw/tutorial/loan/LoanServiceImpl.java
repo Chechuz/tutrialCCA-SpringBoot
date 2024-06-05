@@ -40,30 +40,30 @@ public class LoanServiceImpl implements LoanService {
         Specification<Loan> spec = buildSpec(titleGame, clientName, date);
         Pageable pageable = dto.getPageable().getPageable();
         return loanRepository.findAll(spec, pageable);
-        
+
     }
 
     @Override
-    public void save(LoanDto dto) {
-        /**
-         Date loanDate = dto.getLoan_date();
-         Date returnDate = dto.getReturn_date();
-         Long gameId = dto.getGame().getId();
-         Long clientId = dto.getClient().getId();
+    public void save(LoanDto dto) throws Exception {
 
-         if (isGameAlreadyLoaned(gameId, loanDate, returnDate)) {
-         throw new IllegalArgumentException("El juego ya está prestado en el rango de fechas especificado.");
-         }
+        // Validar si el juego ya ha sido prestado
+        boolean isGameAlreadyLoaned = loanRepository.existsByGameAndLoanDateBetween(dto.getGame().getId(), dto.getLoan_date(), dto.getReturn_date());
+        if (isGameAlreadyLoaned) {
+            throw new Exception("El juego ya está prestado a otro cliente en el mismo período.");
+        }
 
-         if (hasClientExceededLoanLimit(clientId, loanDate, returnDate)) {
-         throw new IllegalArgumentException("El cliente ya tiene más de dos juegos prestados en el rango de fechas especificado.");
-         }
-         **/
+        // Validar si el cliente ya tiene dos juegos prestados en el mismo período
+        int clientLoanCount = loanRepository.countByClientAndLoanDateBetween(dto.getClient().getId(), dto.getLoan_date(), dto.getReturn_date());
+
+        if (clientLoanCount >= 2) {
+            throw new Exception("El cliente ya tiene dos juegos prestados en el mismo período.");
+        }
 
         Loan loan = new Loan();
         BeanUtils.copyProperties(dto, loan, "id", "client", "game");
         loan.setClient(clientService.get(dto.getClient().getId()));
         loan.setGame(gameService.get(dto.getGame().getId()));
+        System.out.println("DATOS RECIBIDOS:  " + loan);
 
         this.loanRepository.save(loan);
     }
@@ -80,8 +80,8 @@ public class LoanServiceImpl implements LoanService {
     /**
      * Metodo que filtra un {@link Loan}
      * por el
-     * @param clientName  o por
-     * @param titleGame
+     * @param clientName  (nombre del cliente) o por
+     * @param titleGame (titulo del juego)
      */
     public Specification<Loan> buildSpec(String titleGame, String clientName, String date) {
         Specification<Loan> spec;
@@ -113,14 +113,5 @@ public class LoanServiceImpl implements LoanService {
             return null;
         }
     }
-    /**
-     private boolean isGameAlreadyLoaned(Long gameId, Date loanDate, Date returnDate) {
-     return loanRepository.existsByGameIdAndLoanDateBetweenOrReturnDateBetween(gameId, loanDate, returnDate, loanDate, returnDate);
-     }
 
-     private boolean hasClientExceededLoanLimit(Long clientId, Date loanDate, Date returnDate) {
-     int loansCount = loanRepository.countByClientIdAndLoanDateBetweenOrReturnDateBetween(clientId, loanDate, returnDate, loanDate, returnDate);
-     return loansCount >= 2;
-     }
-     **/
 }

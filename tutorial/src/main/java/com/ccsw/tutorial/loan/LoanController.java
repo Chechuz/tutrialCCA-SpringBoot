@@ -41,8 +41,6 @@ public class LoanController {
 
         Page<Loan> page = this.loanService.findPage(dto, titleGame, clientName, date);
 
-        System.out.println("Datos Filtrados: " + dto + " - " + titleGame + "- " + clientName + "- " + date);
-
         return new PageImpl<>(page.getContent().stream().map(e -> mapper.map(e, LoanDto.class)).collect(Collectors.toList()), page.getPageable(), page.getTotalElements());
     }
 
@@ -53,7 +51,7 @@ public class LoanController {
      */
     @Operation(summary = "Save", description = "Method that saves a Loan")
     @RequestMapping(path = { "" }, method = RequestMethod.PUT)
-    public void save(@RequestBody LoanDto dto) {
+    public void save(@RequestBody LoanDto dto) throws Exception {
 
         this.loanService.save(dto);
     }

@@ -6,8 +6,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 
+import java.util.Date;
 import java.util.List;
 
 public interface LoanRepository extends CrudRepository<Loan, Long>, JpaSpecificationExecutor<Loan> {
@@ -23,23 +26,12 @@ public interface LoanRepository extends CrudRepository<Loan, Long>, JpaSpecifica
     @EntityGraph(attributePaths = { "game", "client" })
     List<Loan> findAll(Specification<Loan> spec);
 
-    /**
-     * Query que valida que un
-     * @param gameId
-     * no haya sido prestado mas de una vez en un dia o rango de fechas
-     * @return
-     */
-    //@Query("SELECT COUNT(l) > 0 FROM Loan l WHERE l.game.id = :gameId AND (l.loanDate BETWEEN :loanDate AND :returnDate OR l.returnDate BETWEEN :loanDate AND :returnDate)")
-    //boolean existsByGameIdAndLoanDateBetweenOrReturnDateBetween(Long gameId, Date loanDate, Date returnDate, Date loanDate, Date returnDate);
+    //Consulta para valider si un juego está prestado en un rango de fechas determinado
+    @Query("SELECT COUNT(l) > 0 FROM Loan l WHERE l.game.id = :gameId AND l.loan_date <= :endDate AND l.return_date >= :startDate")
+    boolean existsByGameAndLoanDateBetween(@Param("gameId") Long gameId, @Param("startDate") Date startDate, @Param("endDate") Date endDate);
 
-    /**
-     * Query que valida si un
-     * @param clientId
-     *tiene juegos prestaods
-     * @return
-     */
-    //@Query("SELECT COUNT(l) FROM Loan l WHERE l.client.id = :clientId AND (l.loanDate BETWEEN :loanDate AND :returnDate OR l.returnDate BETWEEN :loanDate AND :returnDate)")
-    //int countByClientIdAndLoanDateBetweenOrReturnDateBetween(Long clientId, Date loanDate, Date returnDate, Date loanDate, Date returnDate);
-
+    //Consulta para validar que un cliente ya tiene o no dos juegos prestados en ese rango de fechas
+    @Query("SELECT COUNT(l) FROM Loan l WHERE l.client.id = :clientId AND l.loan_date <= :endDate AND l.return_date >= :startDate")
+    int countByClientAndLoanDateBetween(@Param("clientId") Long clientId, @Param("startDate") Date startDate, @Param("endDate") Date endDate);
 }
 
