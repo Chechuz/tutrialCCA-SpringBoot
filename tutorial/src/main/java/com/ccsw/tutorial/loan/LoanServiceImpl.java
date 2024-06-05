@@ -3,6 +3,7 @@ package com.ccsw.tutorial.loan;
 import com.ccsw.tutorial.client.ClientService;
 import com.ccsw.tutorial.common.criteria.SearchCriteria;
 import com.ccsw.tutorial.game.GameService;
+import com.ccsw.tutorial.loan.exceptions.LoanValidationException;
 import com.ccsw.tutorial.loan.model.Loan;
 import com.ccsw.tutorial.loan.model.LoanDto;
 import com.ccsw.tutorial.loan.model.LoanSearchDto;
@@ -44,19 +45,19 @@ public class LoanServiceImpl implements LoanService {
     }
 
     @Override
-    public void save(LoanDto dto) throws Exception {
+    public void save(LoanDto dto) throws LoanValidationException {
 
         // Validar si el juego ya ha sido prestado
         boolean isGameAlreadyLoaned = loanRepository.existsByGameAndLoanDateBetween(dto.getGame().getId(), dto.getLoan_date(), dto.getReturn_date());
         if (isGameAlreadyLoaned) {
-            throw new Exception("El juego ya está prestado a otro cliente en el mismo período.");
+            throw new LoanValidationException("El juego ya está prestado en el periodo seleccionado.");
         }
 
         // Validar si el cliente ya tiene dos juegos prestados en el mismo período
         int clientLoanCount = loanRepository.countByClientAndLoanDateBetween(dto.getClient().getId(), dto.getLoan_date(), dto.getReturn_date());
 
         if (clientLoanCount >= 2) {
-            throw new Exception("El cliente ya tiene dos juegos prestados en el mismo período.");
+            throw new LoanValidationException("El cliente ya tiene dos juegos prestados en el mismo período.");
         }
 
         Loan loan = new Loan();

@@ -1,5 +1,6 @@
 package com.ccsw.tutorial.loan;
 
+import com.ccsw.tutorial.loan.exceptions.LoanValidationException;
 import com.ccsw.tutorial.loan.model.Loan;
 import com.ccsw.tutorial.loan.model.LoanDto;
 import com.ccsw.tutorial.loan.model.LoanSearchDto;
@@ -9,6 +10,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.stream.Collectors;
@@ -51,9 +53,13 @@ public class LoanController {
      */
     @Operation(summary = "Save", description = "Method that saves a Loan")
     @RequestMapping(path = { "" }, method = RequestMethod.PUT)
-    public void save(@RequestBody LoanDto dto) throws Exception {
-
-        this.loanService.save(dto);
+    public ResponseEntity<?> save(@RequestBody LoanDto dto) throws LoanValidationException {
+        try {
+            loanService.save(dto);
+            return ResponseEntity.noContent().build();
+        } catch (LoanValidationException ex) {
+            return ResponseEntity.badRequest().body(ex.getMessage());
+        }
     }
 
     /**

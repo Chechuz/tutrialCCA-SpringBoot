@@ -1,5 +1,6 @@
 package com.ccsw.tutorial.loan;
 
+import com.ccsw.tutorial.loan.exceptions.LoanValidationException;
 import com.ccsw.tutorial.loan.model.Loan;
 import com.ccsw.tutorial.loan.model.LoanDto;
 import com.ccsw.tutorial.loan.model.LoanSearchDto;
@@ -28,7 +29,7 @@ public interface LoanService {
      *
      * @param dto datos de la entidad
      */
-    void save(LoanDto dto) throws Exception;
+    void save(LoanDto dto) throws LoanValidationException;
 
     /**
      * Método para crear o actualizar un {@link Loan}
