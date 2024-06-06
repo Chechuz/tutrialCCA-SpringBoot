@@ -69,25 +69,3 @@ public class ClientServiceImpl implements ClientService {
 
     }
 }
-/*
- int exist = itExist(findAll(), dto);// si es igual da 0
-        int integer = (exist != 0) ? 1 : 0;
-
-        Client client;
-        if (id == null) {
-            System.out.println("Entra en el if");
-            switch (integer) {
-            case 0:
-                System.out.println("switch caso 0");
-                throw new Exception("This client already exists");
-            case 1:
-                System.out.println("switch caso 1");
-                client = new Client();
-                break;
-            }
-        }
-        System.out.println("Sale del if");
-        client = this.get(id);
-        client.setName(dto.getName());
-        this.clientRepository.save(client);
- */
