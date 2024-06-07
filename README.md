@@ -18,6 +18,20 @@ La API proporciona las siguientes funcionalidades para la aplicación cliente:
 - **MySQL**: Base de datos utilizada para almacenar la información de la ludoteca.
 - **JUnit**: Framework para pruebas unitarias, asegurando la calidad y funcionalidad del código.
 
+## 💻 Comandos Útiles
+
+Aquí tienes algunos comandos que puedes utilizar en este repositorio:
+
+### Comandos para Git
+
+- `git clone <url>`: Clona este repositorio en tu máquina local.
+- `git pull`: Actualiza tu repositorio local con los últimos cambios del repositorio remoto.
+- `git push`: Sube tus cambios locales al repositorio remoto.
+- `git branch`: Muestra las ramas disponibles en tu repositorio.
+- `git checkout <branch>`: Cambia a la rama especificada.
+- `git merge <branch>`: Fusiona la rama especificada en tu rama actual.
+
+
 ### 📚 Documentación y Recursos
 
 - **Repositorio de la Aplicación Cliente**: Puedes ver y clonar el repositorio de la aplicación cliente [aquí](https://github.com/Chechuz/tutorialCCA-Angular).
